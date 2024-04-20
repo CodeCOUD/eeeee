@@ -1,0 +1,202 @@
+#include <Servo.h>
+
+Servo motor; 
+int const trigPin=11;
+int const echoPin=12;
+int duracion, distanciaCm;
+int LED_Azul=3;
+
+char ValorEntrante=0;
+int ledRojo = 7;
+int ledVerde = 6;
+
+int pinSound = 5;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  Serial.begin(9600);
+  pinMode(ledRojo,OUTPUT);
+  pinMode(ledVerde,OUTPUT);
+  motor.attach(9);
+
+  pinMode(LED_Azul, OUTPUT);
+
+pinMode (pinSound,OUTPUT); // PIN DEL BUZZER O ALTOPARLANTE
+}
+void c_starWars_c()
+{
+  tone(pinSound, 391, 330.8821875);
+    delay(330.8821875);
+    delay(238.97046875);
+    tone(pinSound, 391, 361.519427083);
+    delay(361.519427083);
+    delay(232.843020833);
+    tone(pinSound, 391, 367.646875);
+    delay(367.646875);
+    delay(202.20578125);
+    tone(pinSound, 311, 287.990052083);
+    delay(287.990052083);
+    delay(147.05875);
+    tone(pinSound, 466, 79.6568229167);
+    delay(79.6568229167);
+    delay(73.529375);
+    tone(pinSound, 391, 416.666458333);
+    delay(416.666458333);
+    delay(165.44109375);
+    tone(pinSound, 311, 287.990052083);
+    delay(287.990052083);
+    delay(165.44109375);
+    tone(pinSound, 466, 85.7842708333);
+    delay(85.7842708333);
+    delay(55.14703125);
+    tone(pinSound, 391, 747.548645833);
+    delay(747.548645833);
+    delay(422.79390625);
+    tone(pinSound, 587, 373.774322917);
+    delay(373.774322917);
+    delay(220.588125);
+    tone(pinSound, 587, 367.646875);
+    delay(367.646875);
+    delay(208.333229167);
+    tone(pinSound, 587, 386.02921875);
+    delay(386.02921875);
+    delay(226.715572917);
+    tone(pinSound, 622, 257.3528125);
+    delay(257.3528125);
+    delay(165.44109375);
+    tone(pinSound, 466, 91.91171875);
+    delay(91.91171875);
+    delay(73.529375);
+    tone(pinSound, 369, 416.666458333);
+    delay(416.666458333);
+    delay(153.186197917);
+    tone(pinSound, 311, 251.225364583);
+    delay(251.225364583);
+    delay(177.695989583);
+    tone(pinSound, 466, 85.7842708333);
+    delay(85.7842708333);
+    delay(79.6568229167);
+    tone(pinSound, 391, 514.705625);
+    delay(514.705625);
+    delay(655.636927083);
+    tone(pinSound, 783, 453.431145833);
+    delay(453.431145833);
+    delay(134.803854167);
+    tone(pinSound, 391, 294.1175);
+    delay(294.1175);
+    delay(165.44109375);
+    tone(pinSound, 391, 116.421510417);
+    delay(116.421510417);
+    delay(30.6372395833);
+    tone(pinSound, 783, 373.774322917);
+    delay(373.774322917);
+    delay(165.44109375);
+    tone(pinSound, 739, 318.627291667);
+    delay(318.627291667);
+    delay(153.186197917);
+    tone(pinSound, 698, 98.0391666667);
+    delay(98.0391666667);
+    delay(49.0195833333);
+    tone(pinSound, 659, 140.931302083);
+    delay(140.931302083);
+    delay(6.12744791667);
+    tone(pinSound, 622, 98.0391666667);
+    delay(98.0391666667);
+    delay(49.0195833333);
+    tone(pinSound, 659, 128.67640625);
+    delay(128.67640625);
+    delay(471.813489583);
+    tone(pinSound, 415, 110.2940625);
+    delay(110.2940625);
+    delay(183.8234375);
+    tone(pinSound, 554, 392.156666667);
+    delay(392.156666667);
+    delay(196.078333333);
+    tone(pinSound, 523, 324.754739583);
+    delay(324.754739583);
+    delay(116.421510417);
+    tone(pinSound, 493, 110.2940625);
+    delay(110.2940625);
+    delay(42.8921354167);
+    tone(pinSound, 466, 116.421510417);
+    delay(116.421510417);
+    delay(18.38234375);
+    tone(pinSound, 440, 91.91171875);
+    delay(91.91171875);
+    delay(61.2744791667);
+    tone(pinSound, 466, 128.67640625);
+    delay(128.67640625);
+    delay(465.686041667);
+    tone(pinSound, 311, 98.0391666667);
+    delay(98.0391666667);
+    delay(196.078333333);
+    tone(pinSound, 369, 355.391979167);
+    delay(355.391979167);
+    delay(245.097916667);
+    tone(pinSound, 311, 337.009635417);
+    delay(337.009635417);
+    delay(104.166614583);
+    tone(pinSound, 369, 73.529375);
+    delay(73.529375);
+    delay(85.7842708333);
+    tone(pinSound, 466, 398.284114583);
+    delay(398.284114583);
+    delay(165.44109375); 
+  }
+void loop() 
+{
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(1);
+  digitalWrite(trigPin, LOW);
+  duracion = pulseIn(echoPin, HIGH);
+  distanciaCm= duracion/58.2;
+  Serial.println(distanciaCm);
+  delay(200);
+  
+  if(distanciaCm<=40)
+  {
+
+   digitalWrite(LED_Azul, HIGH);
+    
+   c_starWars_c();
+     delay(1000);
+  
+     noTone(9);
+  }
+  else{digitalWrite(LED_Azul, LOW);}
+  if(Serial.available()>0)
+  {
+    ValorEntrante=Serial.read();
+    Serial.println(ValorEntrante);
+
+
+   if(ValorEntrante=='1')
+   {
+    int angulo =90;
+       do{
+         angulo=angulo-1;
+         motor.write(angulo);
+         delay(50);
+         }while(angulo>0); 
+ 
+  
+    digitalWrite(ledVerde,HIGH);
+    digitalWrite(ledRojo,LOW);
+    }
+      
+   else{} if(ValorEntrante=='0'){
+     int angulo=0;
+                 do{
+                    angulo=angulo+1;
+                    motor.write(angulo);
+                     delay(50);
+                    }while(angulo<90);
+
+    digitalWrite(ledRojo,HIGH); 
+    digitalWrite(ledVerde,LOW);}
+  }
+  
+  else{}
+}

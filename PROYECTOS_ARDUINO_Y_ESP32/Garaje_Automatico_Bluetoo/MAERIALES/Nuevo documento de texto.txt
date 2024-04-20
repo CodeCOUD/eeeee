@@ -1,0 +1,12 @@
+Lista de materiales:
+  Arduino UNO R3
+  Modulo Bluetooth HC-05
+  Servomotor SG 90 
+  Protoboard pequeña
+  Dos leds 
+  Cables tipo jumper macho macho y macho hembra
+  Dos resistencias de 330 ohms
+  Plantilla impresa
+  Silicona 
+  Cartón
+  Un celular con Android

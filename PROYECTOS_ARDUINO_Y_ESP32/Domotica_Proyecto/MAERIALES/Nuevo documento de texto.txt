@@ -1,0 +1,14 @@
+Lista de materiales:
+  ESP32
+  Servomotor SG 90 
+  Protoboard pequeña
+  Buzer
+  leds 
+  cable UTP
+  Cables tipo jumper macho macho y macho hembra
+  resistencias de 330 ohms
+  sensor LM35
+  LCD display
+  Silicona 
+  Cartón
+  Un celular con Android

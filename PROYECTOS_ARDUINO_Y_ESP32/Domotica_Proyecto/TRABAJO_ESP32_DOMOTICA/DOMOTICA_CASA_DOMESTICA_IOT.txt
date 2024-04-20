@@ -1,0 +1,178 @@
+#include <ESP32Servo.h>
+#include <WiFi.h>
+#include <LiquidCrystal.h>
+
+const char* ssid = "FLIA_COLQUE"; //USUARIO DE RED
+const char* password = "ronalmbts123";//CONTRASEÑA DE RED
+WiFiServer server(80);
+Servo servoMotor1, servoMotor2, servoMotor3;
+
+
+LiquidCrystal lcd(13, 12, 14, 27, 26, 25);
+int SENSOR;
+float TEMPERATURA;
+float SUMA;
+
+int tonePin = 4;  // Pin al que está conectado el altavoz
+boolean stateAlarm = true;  // Inicialmente, la alarma está activada
+
+void setup()
+{
+  lcd.begin(16, 2);
+
+Serial.begin(115200);
+pinMode(15, OUTPUT); //SALIDA DEL PIN 6 LUCES LED SALA
+pinMode(2, OUTPUT); //SALIDA DEL PIN 7 LUCES LED DORMITORIO
+pinMode(0, OUTPUT); //SALIDA DEL PIN 8 LUCES LED GARAJE
+servoMotor1.attach(5); //SALIDA DEL PIN 5 PUERTA PRINCIPAL
+servoMotor2.attach(18);//SALIDA DEL PIN 18 DORMITORIO
+servoMotor3.attach(19);//SALIDA DEL PIN 19 GARAJE
+
+ pinMode(tonePin, OUTPUT);
+delay(10);
+
+Serial.println();
+Serial.println();
+Serial.print("Connecting to ");
+Serial.println(ssid);
+WiFi.begin(ssid, password);
+while (WiFi.status() != WL_CONNECTED) {
+delay(500);
+Serial.print(".");
+}
+Serial.println("");
+Serial.println("WiFi connected.");
+Serial.println("IP address: ");
+Serial.println(WiFi.localIP());
+server.begin();
+}
+
+void loop(){
+WiFiClient client = server.available();
+if (client) {
+Serial.println("New Client.");
+String currentLine = "";
+while (client.connected()) {
+if (client.available()) {
+char c = client.read();
+Serial.write(c);
+if (c == '\n') {
+if (currentLine.length() == 0) {
+client.println("HTTP/1.1 200 OK");
+client.println("Content-type:text/html");
+client.println();
+//INTERRUPTOR LUCES LED SALA
+client.print("<a href=\"/A\"><input type='image' src='https://i.imgur.com/uQxhFE5.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/B\"><input type='image' src='https://i.imgur.com/00i0BdB.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+//INTERRUPTOR LUCES LED DORMITORIO
+client.print("<a href=\"/C\"><input type='image' src='https://e1.pngegg.com/pngimages/615/754/png-clipart-orange-phoenix-icon-stand-by-square-black-and-yellow-power-button-icon-thumbnail.png' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/D\"><input type='image' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDkzljs0xIIV4fwXpDCbrjoVufvQuOLguBwv9l1vifE5UI2jRSktSFTQ4tv-I5X-X8Tgw&usqp=CAU' style='display:block; margin:auto' width='30%'></a><br>");
+//INTERRUPTOR LUCES LED GARAJE
+client.print("<a href=\"/E\"><input type='image' src='https://i.imgur.com/uQxhFE5.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/F\"><input type='image' src='https://i.imgur.com/00i0BdB.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+//
+client.print("<a href=\"/G\"><input type='image' src='https://i.imgur.com/uQxhFE5.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/H\"><input type='image' src='https://i.imgur.com/00i0BdB.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+//
+client.print("<a href=\"/I\"><input type='image' src='https://i.imgur.com/uQxhFE5.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/J\"><input type='image' src='https://i.imgur.com/00i0BdB.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+//
+client.print("<a href=\"/K\"><input type='image' src='https://i.imgur.com/uQxhFE5.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/L\"><input type='image' src='https://i.imgur.com/00i0BdB.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+//
+client.print("<a href=\"/M\"><input type='image' src='https://i.imgur.com/uQxhFE5.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/N\"><input type='image' src='https://i.imgur.com/00i0BdB.jpg' style='display:block; margin:auto' width='30%'></a><br>");
+//
+client.print("<a href=\"/O\"><input type='image' src='https://e1.pngegg.com/pngimages/615/754/png-clipart-orange-phoenix-icon-stand-by-square-black-and-yellow-power-button-icon-thumbnail.png' style='display:block; margin:auto' width='30%'></a><br>");
+client.print("<a href=\"/P\"><input type='image' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDkzljs0xIIV4fwXpDCbrjoVufvQuOLguBwv9l1vifE5UI2jRSktSFTQ4tv-I5X-X8Tgw&usqp=CAU' style='display:block; margin:auto' width='30%'></a><br>");
+client.println();
+break;
+} else {
+currentLine = "";
+
+}
+} else if (c != '\r') {
+currentLine += c;
+}
+if (currentLine.endsWith("GET /A")) {
+digitalWrite(15, HIGH); // ENCENDIDO LUCES LED SALA
+}
+if (currentLine.endsWith("GET /B")) {
+digitalWrite(15, LOW); // APAGADO LUCES LED SALA
+}
+if (currentLine.endsWith("GET /C")) {
+digitalWrite(2, HIGH); // ENCENDIDO LUCES LED DORMITORIO
+
+}
+if (currentLine.endsWith("GET /D")) {
+digitalWrite(2, LOW); // APAGADO LUCES LED DORMITORIO
+
+}
+if (currentLine.endsWith("GET /E")) {
+digitalWrite(0, HIGH); // ENCENDIDO LUCES LED GARAJE
+}
+if (currentLine.endsWith("GET /F")) {
+digitalWrite(0, LOW); // APAGADO LUCES LED GARAJE
+}
+if (currentLine.endsWith("GET /G")) {
+servoMotor1.write(90); // SERVO MOTOR A 90 GRADOS
+}
+if (currentLine.endsWith("GET /H")) {
+servoMotor1.write(0); // SERVO MOTOR A 0 GRADOS
+}
+if (currentLine.endsWith("GET /I")) {
+servoMotor2.write(90); // SERVO MOTOR A 90 GRADOS
+}
+if (currentLine.endsWith("GET /J")) {
+servoMotor2.write(0); // SERVO MOTOR A 0 GRADOS
+}
+if (currentLine.endsWith("GET /K")) {
+servoMotor3.write(90); // SERVO MOTOR A 90 GRADOS
+}
+if (currentLine.endsWith("GET /L")) {
+servoMotor3.write(0); // SERVO MOTOR A 0 GRADOS
+}
+if (currentLine.endsWith("GET /M")) {
+ // Reproduce la alarma
+   if (stateAlarm) {
+    for (int i = 0; i < 5; i++) {  // Repetir el patrón de alarma 3 veces
+      // Tono ascendente
+      for (int freq = 200; freq < 2000; freq += 10) {
+        tone(tonePin, freq);
+        delay(5);  // Duración de cada tono ascendente
+      }
+      
+      // Tono descendente
+      for (int freq = 2000; freq > 200; freq -= 10) {
+        tone(tonePin, freq);
+        delay(5);  // Duración de cada tono descendente
+      }
+    }
+  }
+}
+if (currentLine.endsWith("GET /N")) {
+  noTone(tonePin);
+}
+if (currentLine.endsWith("GET /O")) {
+ SUMA = 0;
+  for (int i = 0; i < 5; i++) {
+    SENSOR = analogRead(A0);
+    TEMPERATURA = (SENSOR * 5000.0) / 1023 / 10;
+    SUMA += TEMPERATURA;
+    delay(500);
+  }
+  
+  lcd.setCursor(0, 0);
+  lcd.print("temp: ");
+  lcd.print((SUMA / 5.0), 1); // Corregido el formato de impresión
+  lcd.print(" C");
+}
+if (currentLine.endsWith("GET /P")) {
+lcd.clear(); // LCD TEMPERATURA APAGADA
+}
+}
+}
+client.stop();
+Serial.println("Client Disconnected.");
+}
+}
